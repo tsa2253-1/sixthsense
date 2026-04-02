@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block title %}ReadAssist{% endblock %}
+
+{% block content %}
+<div class="feature-hero">
+  <div class="container">
+    <span class="feature-tag"><i class="bi bi-book-fill" aria-hidden="true"></i> Feature 02 · ReadAssist</span>
+    <h1>Accessible Text</h1>
+    <p class="text-muted mt-2" style="max-width:50ch;">
+      Paste any text. Transform it into a format that works for you.
+      Then listen to it read aloud.
+    </p>
+  </div>
+</div>
+
+<div class="container" style="padding-top:2rem; padding-bottom:3rem;">
+  <div class="grid-2" style="align-items:start; gap:2rem;">
+
+    <!-- Input -->
+    <div>
+      <div class="card" style="height:auto;">
+        <h2 style="font-size:1rem; color:var(--amber); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:1rem;">
+          <i class="bi bi-pencil-square" aria-hidden="true"></i> Input Text
+        </h2>
+        <label for="inputText" class="visually-hidden">Text to transform and read</label>
+        <textarea id="inputText"
+                  placeholder="Paste or type any text — an article, a letter, a homework question…"
+                  aria-describedby="inputHint"></textarea>
+        <p id="inputHint" class="form-hint">Up to 10,000 characters.</p>
+
+        <div class="flex flex-wrap gap-2 mt-3">
+          <button id="transformBtn" class="btn btn-amber">
+            <i class="bi bi-magic" aria-hidden="true"></i> Apply Settings
+          </button>
+          <button id="clearInputBtn" class="btn btn-ghost">
+            <i class="bi bi-trash" aria-hidden="true"></i> Clear
+          </button>
+        </div>
+
+        <!-- Sample texts -->
+        <p class="form-hint mt-3">Load a sample:</p>
+        <div class="flex flex-wrap gap-2">
+          <button class="btn btn-ghost sample-btn" style="font-size:.8rem; padding:.4rem .8rem; min-height:36px;"
+                  data-text="The quick brown fox jumps over the lazy dog. This pangram contains every letter of the English alphabet. It is commonly used to test fonts and typesetting systems.">
+            Pangram
+          </button>
+          <button class="btn btn-ghost sample-btn" style="font-size:.8rem; padding:.4rem .8rem; min-height:36px;"
+                  data-text="Welcome to SixthSense ReadAssist. This tool is designed to make reading easier for everyone — including people with low vision, dyslexia, or reading fatigue. Use the display options to find your perfect reading format, then press Read Aloud to hear it spoken clearly.">
+            About ReadAssist
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Options + TTS -->
+    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+
+      <!-- Display options -->
+      <div class="card" style="height:auto;">
+        <h2 style="font-size:.85rem; color:var(--teal); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:1rem;">
+          <i class="bi bi-sliders" aria-hidden="true"></i> Display Mode
+        </h2>
+        <fieldset>
+          <legend class="visually-hidden">Text display mode</legend>
+          <div class="flex flex-wrap gap-3 mb-4">
+            <label><input type="radio" name="displayMode" value="default" checked /> Default</label>
+            <label><input type="radio" name="displayMode" value="contrast" /> High Contrast</label>
+            <label><input type="radio" name="displayMode" value="dyslexia" /> Dyslexia Friendly</label>
+          </div>
+        </fieldset>
+        <div class="mb-3">
+          <label for="readFontSize" class="form-label">Font Size: <span id="readFontSizeVal" class="text-teal mono">17</span>px</label>
+          <input type="range" id="readFontSize" min="12" max="48" step="1" value="17" />
+        </div>
+        <div>
+          <label for="lineHeight" class="form-label">Line Spacing: <span id="lineHeightVal" class="text-teal mono">1.9</span></label>
+          <input type="range" id="lineHeight" min="1.2" max="3.0" step="0.1" value="1.9" />
+        </div>
+      </div>
+
+      <!-- TTS -->
+      <div class="card" style="height:auto;">
+        <h2 style="font-size:.85rem; color:var(--teal); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:1rem;">
+          <i class="bi bi-volume-up-fill" aria-hidden="true"></i> Text-to-Speech
+        </h2>
+        <div class="mb-3">
+          <label for="ttsRate" class="form-label">Speed: <span id="ttsRateVal" class="text-teal mono">1.0</span>×</label>
+          <input type="range" id="ttsRate" min="0.5" max="2.0" step="0.1" value="1.0" />
+        </div>
+        <div class="mb-3">
+          <label for="ttsPitch" class="form-label">Pitch: <span id="ttsPitchVal" class="text-teal mono">1.0</span></label>
+          <input type="range" id="ttsPitch" min="0.5" max="2.0" step="0.1" value="1.0" />
+        </div>
+        <div class="mb-3">
+          <label for="ttsVoice" class="form-label">Voice</label>
+          <select id="ttsVoice"><option value="">Default voice</option></select>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button id="speakBtn" class="btn btn-primary" style="font-size:.9rem;">
+            <i class="bi bi-play-fill" aria-hidden="true"></i> Read Aloud
+          </button>
+          <button id="pauseBtn" class="btn btn-secondary" style="font-size:.9rem;" disabled aria-disabled="true">
+            <i class="bi bi-pause-fill" aria-hidden="true"></i> Pause
+          </button>
+          <button id="stopTtsBtn" class="btn btn-ghost" style="font-size:.9rem;" disabled aria-disabled="true">
+            <i class="bi bi-stop-fill" aria-hidden="true"></i> Stop
+          </button>
+        </div>
+        <div id="ttsUnsupported" style="display:none; color:var(--orange); font-size:.85rem; margin-top:.5rem;" role="alert">
+          Text-to-speech is not supported in this browser.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Output -->
+  <section class="mt-4" aria-labelledby="output-heading">
+    <h2 id="output-heading" style="font-size:.85rem; color:var(--teal); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.75rem;">
+      <i class="bi bi-eye-fill" aria-hidden="true"></i> Transformed Output
+    </h2>
+    <div id="readOutput" class="read-output" tabindex="0" aria-label="Transformed text output">
+      <p style="color:var(--text-3); font-style:italic;">Your transformed text will appear here.</p>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  const inputText   = document.getElementById('inputText');
+  const output      = document.getElementById('readOutput');
+  const transformBtn= document.getElementById('transformBtn');
+  const clearBtn    = document.getElementById('clearInputBtn');
+  const speakBtn    = document.getElementById('speakBtn');
+  const pauseBtn    = document.getElementById('pauseBtn');
+  const stopTtsBtn  = document.getElementById('stopTtsBtn');
+  const voiceSel    = document.getElementById('ttsVoice');
+  const rateSlider  = document.getElementById('ttsRate');
+  const pitchSlider = document.getElementById('ttsPitch');
+  const rateVal     = document.getElementById('ttsRateVal');
+  const pitchVal    = document.getElementById('ttsPitchVal');
+  const fontSlider  = document.getElementById('readFontSize');
+  const fontVal     = document.getElementById('readFontSizeVal');
+  const lhSlider    = document.getElementById('lineHeight');
+  const lhVal       = document.getElementById('lineHeightVal');
+
+  const synth = window.speechSynthesis;
+  if (!synth) document.getElementById('ttsUnsupported').style.display = 'block';
+
+  // Load voices
+  function loadVoices() {
+    const voices = synth ? synth.getVoices() : [];
+    voiceSel.innerHTML = '<option value="">Default voice</option>';
+    voices.forEach((v,i) => {
+      const o = document.createElement('option');
+      o.value = i; o.textContent = `${v.name} (${v.lang})`;
+      voiceSel.appendChild(o);
+    });
+  }
+  loadVoices();
+  if (synth && speechSynthesis.onvoiceschanged !== undefined)
+    speechSynthesis.onvoiceschanged = loadVoices;
+
+  // Slider live feedback
+  rateSlider.addEventListener('input',  () => rateVal.textContent  = rateSlider.value);
+  pitchSlider.addEventListener('input', () => pitchVal.textContent = pitchSlider.value);
+  fontSlider.addEventListener('input',  () => { fontVal.textContent = fontSlider.value; reapply(); });
+  lhSlider.addEventListener('input',   () => { lhVal.textContent   = lhSlider.value;   reapply(); });
+
+  function getMode() { return document.querySelector('input[name="displayMode"]:checked').value; }
+
+  function reapply() {
+    const text = output.innerText.trim();
+    if (text && text !== 'Your transformed text will appear here.') applyTransform();
+  }
+
+  function applyTransform() {
+    const text = inputText.value.trim();
+    if (!text) { SS.announce('Please enter some text first.', 'assertive'); return; }
+
+    const mode = getMode();
+    output.className = 'read-output';
+    output.style.cssText = '';
+    output.textContent = text;
+    output.style.fontSize   = fontSlider.value + 'px';
+    output.style.lineHeight = lhSlider.value;
+
+    if (mode === 'contrast') output.classList.add('mode-contrast');
+    if (mode === 'dyslexia') output.classList.add('mode-dyslexia');
+
+    SS.announce('Text displayed. Press Read Aloud to listen.');
+    output.focus();
+  }
+
+  transformBtn.addEventListener('click', applyTransform);
+  document.querySelectorAll('input[name="displayMode"]').forEach(r => r.addEventListener('change', reapply));
+
+  clearBtn.addEventListener('click', () => {
+    inputText.value = '';
+    output.className = 'read-output';
+    output.style.cssText = '';
+    output.innerHTML = '<p style="color:var(--text-3); font-style:italic;">Your transformed text will appear here.</p>';
+    SS.announce('Cleared.');
+  });
+
+  document.querySelectorAll('.sample-btn').forEach(b => {
+    b.addEventListener('click', () => { inputText.value = b.dataset.text; applyTransform(); });
+  });
+
+  // TTS
+  function setTtsState(speaking) {
+    speakBtn.disabled  =  speaking;  speakBtn.setAttribute('aria-disabled',  speaking ? 'true':'false');
+    pauseBtn.disabled  = !speaking;  pauseBtn.setAttribute('aria-disabled', !speaking ? 'true':'false');
+    stopTtsBtn.disabled= !speaking;  stopTtsBtn.setAttribute('aria-disabled',!speaking ? 'true':'false');
+  }
+
+  speakBtn.addEventListener('click', () => {
+    if (!synth) return;
+    synth.cancel();
+    const text = output.innerText.trim();
+    if (!text || text === 'Your transformed text will appear here.') {
+      SS.announce('Apply text first.', 'assertive'); return;
+    }
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.rate  = parseFloat(rateSlider.value);
+    utt.pitch = parseFloat(pitchSlider.value);
+    if (voiceSel.value !== '') utt.voice = synth.getVoices()[parseInt(voiceSel.value)];
+    utt.onend = () => { setTtsState(false); SS.announce('Reading finished.'); };
+    utt.onerror = () => setTtsState(false);
+    synth.speak(utt);
+    setTtsState(true);
+    SS.announce('Reading aloud.');
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    if (synth.speaking && !synth.paused) {
+      synth.pause();
+      pauseBtn.innerHTML = '<i class="bi bi-play-fill" aria-hidden="true"></i> Resume';
+      SS.announce('Paused.');
+    } else if (synth.paused) {
+      synth.resume();
+      pauseBtn.innerHTML = '<i class="bi bi-pause-fill" aria-hidden="true"></i> Pause';
+      SS.announce('Resumed.');
+    }
+  });
+
+  stopTtsBtn.addEventListener('click', () => {
+    synth.cancel();
+    setTtsState(false);
+    SS.announce('Stopped.');
+  });
+})();
+</script>
+{% endblock %}

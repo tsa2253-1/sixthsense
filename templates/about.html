@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+
+{% block content %}
+<div class="feature-hero">
+  <div class="container">
+    <span class="feature-tag"><i class="bi bi-heart-fill" aria-hidden="true"></i> Mission &amp; Ethics</span>
+    <h1>About SixthSense</h1>
+    <p class="text-muted mt-2" style="max-width:52ch;">
+      Built on empathy-driven engineering. Grounded in universal design principles.
+      Free for every person on every device, forever.
+    </p>
+  </div>
+</div>
+
+<div class="container" style="padding-top:2rem; padding-bottom:3rem;">
+
+  <!-- Ethical statement -->
+  <section aria-labelledby="ethics-heading" style="margin-bottom:3rem;">
+    <div class="card" style="border-left:3px solid var(--teal); border-radius:0 var(--radius) var(--radius) 0;">
+      <h2 id="ethics-heading" style="font-size:1.1rem; color:var(--teal); margin-bottom:.75rem;">
+        <i class="bi bi-shield-check-fill" aria-hidden="true"></i> Ethical Design Statement
+      </h2>
+      <p>
+        SixthSense was built on one belief: <strong>technology should work for every person</strong>,
+        regardless of their sensory ability, economic status, or technical background.
+        Accessibility is not a feature. It is the foundation.
+      </p>
+      <p class="mt-2">
+        We follow <em>Universal Design</em> — building for the full range of human diversity
+        from the start, not as an afterthought. Every interaction, every colour, every font
+        size, every button label was chosen with a specific user need in mind.
+      </p>
+      <p class="mt-2" style="margin-bottom:0;">
+        This application collects <strong>zero personal data</strong>, shows
+        <strong>zero advertisements</strong>, and requires <strong>zero sign-up</strong>.
+        All preferences live in your browser and never leave your device.
+      </p>
+    </div>
+  </section>
+
+  <!-- Sixth Sense concept -->
+  <section aria-labelledby="concept-heading" style="margin-bottom:3rem;">
+    <h2 id="concept-heading" style="margin-bottom:1.25rem;">The Sixth Sense Concept</h2>
+    <div class="grid-2" style="gap:2rem; align-items:start;">
+      <p style="color:var(--text-2); line-height:1.9;">
+        The five human senses — sight, hearing, touch, taste, smell — evolved over millions
+        of years to help us navigate the world. For individuals with hearing or vision
+        impairments, one of those channels is reduced or absent — but the need to
+        perceive the world isn't.
+        <br><br>
+        SixthSense repurposes the computer as a <strong style="color:var(--teal);">perceptual prosthetic</strong> —
+        a sixth sense that bridges the gap between what the body provides and what the
+        environment demands. Speech becomes text. Text becomes speech. Visual scenes
+        become audio descriptions. Silence becomes vibration.
+        <br><br>
+        The technology is not the point. <strong>Independence is.</strong>
+      </p>
+      <div style="display:flex; flex-direction:column; gap:.75rem;">
+        <div class="card" style="padding:1rem; height:auto; flex-direction:row; display:flex; align-items:center; gap:1rem;">
+          <i class="bi bi-mic-fill text-teal" style="font-size:1.5rem; flex-shrink:0;" aria-hidden="true"></i>
+          <div><strong>Sound → Text</strong><p style="margin:0; font-size:.85rem; color:var(--text-2);">SpeakAssist for deaf &amp; hard-of-hearing</p></div>
+        </div>
+        <div class="card" style="padding:1rem; height:auto; flex-direction:row; display:flex; align-items:center; gap:1rem;">
+          <i class="bi bi-volume-up-fill text-amber" style="font-size:1.5rem; flex-shrink:0;" aria-hidden="true"></i>
+          <div><strong>Text → Speech</strong><p style="margin:0; font-size:.85rem; color:var(--text-2);">ReadAssist for vision-impaired &amp; dyslexia</p></div>
+        </div>
+        <div class="card" style="padding:1rem; height:auto; flex-direction:row; display:flex; align-items:center; gap:1rem;">
+          <i class="bi bi-camera-fill" style="font-size:1.5rem; flex-shrink:0; color:var(--cyan);" aria-hidden="true"></i>
+          <div><strong>Scene → Audio</strong><p style="margin:0; font-size:.85rem; color:var(--text-2);">VisionAssist for blind &amp; low-vision</p></div>
+        </div>
+        <div class="card" style="padding:1rem; height:auto; flex-direction:row; display:flex; align-items:center; gap:1rem;">
+          <i class="bi bi-bell-fill" style="font-size:1.5rem; flex-shrink:0; color:var(--orange);" aria-hidden="true"></i>
+          <div><strong>Silence → Signal</strong><p style="margin:0; font-size:.85rem; color:var(--text-2);">AdvancedAlert for all users</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature impact table -->
+  <section aria-labelledby="impact-heading" style="margin-bottom:3rem;">
+    <h2 id="impact-heading" style="margin-bottom:1.25rem;">Accessibility Impact by Feature</h2>
+    <div style="overflow-x:auto;">
+      <table class="a11y-table" aria-label="Feature accessibility benefits summary">
+        <caption class="visually-hidden">Each SixthSense feature, its primary audience, the barrier it removes, and the technology used</caption>
+        <thead>
+          <tr>
+            <th scope="col">Feature</th>
+            <th scope="col">Primary Audience</th>
+            <th scope="col">Barrier Removed</th>
+            <th scope="col">Technology</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" style="color:var(--teal);">SpeakAssist</th>
+            <td>Deaf, hard-of-hearing</td>
+            <td>Cannot access spoken content in real time</td>
+            <td>Web Speech API — SpeechRecognition</td>
+          </tr>
+          <tr>
+            <th scope="row" style="color:var(--amber);">ReadAssist</th>
+            <td>Low vision, dyslexia, reading fatigue</td>
+            <td>Small fonts, poor contrast, text inaccessibility</td>
+            <td>CSS transforms + SpeechSynthesis API</td>
+          </tr>
+          <tr>
+            <th scope="row" style="color:var(--cyan);">VisionAssist</th>
+            <td>Blind, low vision</td>
+            <td>Cannot read printed text, signs, or documents</td>
+            <td>MediaDevices API + Tesseract.js (client-side OCR)</td>
+          </tr>
+          <tr>
+            <th scope="row" style="color:var(--orange);">AdvancedAlert</th>
+            <td>Deaf, blind, and all users</td>
+            <td>Audio-only alarms exclude hearing-impaired</td>
+            <td>Vibration API + SpeechSynthesis + CSS animation</td>
+          </tr>
+          <tr>
+            <th scope="row" style="color:var(--text-2);">Control Panel</th>
+            <td>All users</td>
+            <td>One-size-fits-all interfaces fail diverse needs</td>
+            <td>localStorage + CSS custom properties</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- WCAG compliance -->
+  <section aria-labelledby="wcag-heading" style="margin-bottom:3rem;">
+    <h2 id="wcag-heading" style="margin-bottom:1.25rem;">WCAG 2.1 AA Compliance</h2>
+    <div class="grid-3" style="gap:1rem;">
+      {% set badges = [
+        ('bi-keyboard', 'Keyboard Navigation', 'All interactive elements reachable and operable via Tab key alone. No mouse required.'),
+        ('bi-chat-dots-fill', 'Screen Reader Support', 'ARIA landmarks, live regions, labels, roles, and aria-pressed throughout every page.'),
+        ('bi-circle-half', 'Contrast ≥ 4.5:1', 'Every text/background pair verified against WCAG minimum. High Contrast theme exceeds AAA.'),
+        ('bi-eye-fill', 'Focus Indicators', '3px amber focus ring on all interactive elements — never hidden for keyboard users.'),
+        ('bi-lightning', 'Seizure Safety', 'Flash animations capped at 3 per second (WCAG 2.3.1). prefers-reduced-motion respected.'),
+        ('bi-list-ol', 'Heading Structure', 'Proper h1→h4 hierarchy on every page for screen-reader document navigation.'),
+        ('bi-phone', 'Touch Targets', 'All buttons and links are minimum 48px tall — WCAG 2.5.5 recommended size.'),
+        ('bi-arrow-bar-right', 'Skip Link', 'First focusable element on every page jumps to main content — skipping repetitive nav.'),
+        ('bi-universal-access', 'Universal Design', 'All 7 UD principles applied: equitable, flexible, simple, perceptible, tolerant, low effort, spacious.'),
+      ] %}
+      {% for icon, title, desc in badges %}
+      <div class="card" style="padding:1.25rem; height:auto;">
+        <i class="bi {{ icon }} text-teal" style="font-size:1.25rem;" aria-hidden="true"></i>
+        <h3 style="font-size:.95rem; margin:.5rem 0 .3rem;">{{ title }}</h3>
+        <p style="font-size:.8rem; color:var(--text-2); margin:0;">{{ desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="text-center" style="padding:2.5rem 0; border-top:1px solid var(--border);" aria-labelledby="cta-h">
+    <h2 id="cta-h" style="margin-bottom:.75rem;">Ready to experience your Sixth Sense?</h2>
+    <p class="text-muted" style="max-width:44ch; margin:0 auto 1.5rem;">
+      No sign-up. No download. No cost. Just open a tool and start.
+    </p>
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="{{ url_for('caption') }}" class="btn btn-primary"><i class="bi bi-mic-fill" aria-hidden="true"></i> SpeakAssist</a>
+      <a href="{{ url_for('read') }}"    class="btn btn-secondary"><i class="bi bi-book-fill" aria-hidden="true"></i> ReadAssist</a>
+      <a href="{{ url_for('vision') }}"  class="btn btn-secondary"><i class="bi bi-camera-fill" aria-hidden="true"></i> VisionAssist</a>
+      <a href="{{ url_for('alerts') }}"  class="btn btn-secondary"><i class="bi bi-bell-fill" aria-hidden="true"></i> AdvancedAlert</a>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

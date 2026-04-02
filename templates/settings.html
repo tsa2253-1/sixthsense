@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="feature-hero">
+  <div class="container">
+    <span class="feature-tag"><i class="bi bi-sliders" aria-hidden="true"></i> Control Panel</span>
+    <h1>Accessibility Settings</h1>
+    <p class="text-muted mt-2" style="max-width:52ch;">
+      Customise SixthSense to suit your needs. All preferences are saved in your
+      browser — no account, no server, no data transmitted.
+    </p>
+  </div>
+</div>
+
+<div class="container" style="padding-top:2rem; padding-bottom:3rem;">
+
+  <!-- Save confirmation -->
+  <div id="saveConfirm" style="display:none; margin-bottom:1.5rem; padding:.85rem 1.25rem; background:rgba(13,212,168,.12); border:1px solid var(--cyan); border-radius:var(--radius); color:var(--cyan); display:none; align-items:center; gap:.6rem;" role="status" aria-live="polite">
+    <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+    Settings saved and applied across all pages.
+  </div>
+
+  <div class="grid-2" style="align-items:start; gap:2rem;">
+
+    <!-- Left column -->
+    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+
+      <fieldset class="settings-panel">
+        <legend><i class="bi bi-type" aria-hidden="true"></i> Typography</legend>
+
+        <div class="mb-4">
+          <label for="setFontSize" class="form-label">
+            Base Font Size: <span id="setFontSizeVal" class="text-teal mono">17</span>px
+          </label>
+          <input type="range" id="setFontSize" min="12" max="36" step="1" value="17" />
+          <div style="display:flex; justify-content:space-between; font-size:.75rem; color:var(--text-3); margin-top:.25rem;">
+            <span>Small (12px)</span><span>Large (36px)</span>
+          </div>
+        </div>
+
+        <div>
+          <p class="form-label" id="fontFamilyLabel">Font Style</p>
+          <div role="radiogroup" aria-labelledby="fontFamilyLabel" style="display:flex; flex-direction:column; gap:.5rem;">
+            <label><input type="radio" name="fontFamily" value="default" checked />
+              <span style="font-family:'DM Sans',sans-serif;">Default (DM Sans — high legibility)</span>
+            </label>
+            <label><input type="radio" name="fontFamily" value="dyslexia" />
+              <span style="font-family:'Comic Sans MS',cursive; letter-spacing:.04em;">Dyslexia Friendly</span>
+            </label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="settings-panel">
+        <legend><i class="bi bi-palette-fill" aria-hidden="true"></i> Colour Theme</legend>
+        <p style="font-size:.85rem; color:var(--text-2); margin-bottom:1rem;">
+          All themes meet WCAG 2.1 AA contrast requirements.
+          The High Contrast theme exceeds WCAG AAA.
+        </p>
+        <div role="radiogroup" aria-label="Colour theme" style="display:flex; flex-direction:column; gap:.6rem;">
+          <label><input type="radio" name="theme" value="default" checked />
+            Dark (Default) — deep navy with teal accents
+          </label>
+          <label><input type="radio" name="theme" value="light" />
+            Light — clean off-white with dark text
+          </label>
+          <label><input type="radio" name="theme" value="high-contrast" />
+            High Contrast — black background, yellow &amp; cyan accents
+          </label>
+        </div>
+
+        <!-- Live preview -->
+        <div id="themePreview" class="mt-3" style="padding:1rem; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-2); transition:all .3s;">
+          <p style="margin:0; font-size:.9rem;">
+            Preview: <strong>bold text</strong> · <a href="#">link text</a> ·
+            <span style="color:var(--text-2);">muted text</span>
+          </p>
+        </div>
+      </fieldset>
+
+    </div>
+
+    <!-- Right column -->
+    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+
+      <fieldset class="settings-panel">
+        <legend><i class="bi bi-volume-up-fill" aria-hidden="true"></i> Text-to-Speech Defaults</legend>
+
+        <div class="mb-3">
+          <label for="setTtsRate" class="form-label">
+            Reading Speed: <span id="setTtsRateVal" class="text-teal mono">1.0</span>×
+          </label>
+          <input type="range" id="setTtsRate" min="0.5" max="2.0" step="0.1" value="1.0" />
+        </div>
+        <div class="mb-3">
+          <label for="setTtsPitch" class="form-label">
+            Voice Pitch: <span id="setTtsPitchVal" class="text-teal mono">1.0</span>
+          </label>
+          <input type="range" id="setTtsPitch" min="0.5" max="2.0" step="0.1" value="1.0" />
+        </div>
+        <button id="testVoiceBtn" class="btn btn-secondary" style="font-size:.875rem;">
+          <i class="bi bi-play-fill" aria-hidden="true"></i> Test Voice
+        </button>
+      </fieldset>
+
+      <fieldset class="settings-panel">
+        <legend><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Output Channels</legend>
+        <div style="display:flex; flex-direction:column; gap:.75rem;">
+          <label>
+            <input type="checkbox" id="setVibration" checked />
+            <div>
+              <div style="font-weight:600;">Vibration / Haptic Feedback</div>
+              <div style="font-size:.8rem; color:var(--text-3);">Device motor pulses on key events</div>
+            </div>
+          </label>
+          <label>
+            <input type="checkbox" id="setFlash" checked />
+            <div>
+              <div style="font-weight:600;">Screen Flash Alerts</div>
+              <div style="font-size:.8rem; color:var(--text-3);">Visual overlay for AdvancedAlert</div>
+            </div>
+          </label>
+          <label>
+            <input type="checkbox" id="setAudio" checked />
+            <div>
+              <div style="font-weight:600;">Audio / Text-to-Speech</div>
+              <div style="font-size:.8rem; color:var(--text-3);">Spoken output for alerts and features</div>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="settings-panel">
+        <legend><i class="bi bi-toggles" aria-hidden="true"></i> Feature Switches</legend>
+        <div style="display:flex; flex-direction:column; gap:.75rem;">
+          <label><input type="checkbox" id="fSpeakAssist"   checked /> SpeakAssist (speech captions)</label>
+          <label><input type="checkbox" id="fReadAssist"    checked /> ReadAssist (text transformation)</label>
+          <label><input type="checkbox" id="fVisionAssist"  checked /> VisionAssist (camera detection)</label>
+          <label><input type="checkbox" id="fAdvancedAlert" checked /> AdvancedAlert (multimodal alerts)</label>
+        </div>
+      </fieldset>
+
+    </div>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="flex flex-wrap gap-3 mt-4">
+    <button id="saveBtn" class="btn btn-primary">
+      <i class="bi bi-floppy-fill" aria-hidden="true"></i> Save Settings
+    </button>
+    <button id="resetBtn" class="btn btn-ghost">
+      <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reset to Defaults
+    </button>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+/**
+ * Accessibility Control Panel
+ * [A11Y] All prefs stored in localStorage. Live-applied via SS.apply().
+ *        No data leaves the device. Reset clears localStorage entirely.
+ */
+(function () {
+  const fontSizeSlider = document.getElementById('setFontSize');
+  const fontSizeVal    = document.getElementById('setFontSizeVal');
+  const ttsRateSlider  = document.getElementById('setTtsRate');
+  const ttsRateVal     = document.getElementById('setTtsRateVal');
+  const ttsPitchSlider = document.getElementById('setTtsPitch');
+  const ttsPitchVal    = document.getElementById('setTtsPitchVal');
+  const confirmEl      = document.getElementById('saveConfirm');
+
+  function loadForm() {
+    const s = SS.get();
+    fontSizeSlider.value = s.fontSize;
+    fontSizeVal.textContent = s.fontSize;
+    ttsRateSlider.value = s.ttsRate;
+    ttsRateVal.textContent = s.ttsRate;
+    ttsPitchSlider.value = s.ttsPitch || 1.0;
+    ttsPitchVal.textContent = s.ttsPitch || 1.0;
+
+    const themeR = document.querySelector(`input[name="theme"][value="${s.theme || 'default'}"]`);
+    if (themeR) themeR.checked = true;
+    const fontR = document.querySelector(`input[name="fontFamily"][value="${s.fontFamily || 'default'}"]`);
+    if (fontR) fontR.checked = true;
+
+    document.getElementById('setVibration').checked = s.vibration !== false;
+  }
+
+  loadForm();
+
+  // Live slider feedback
+  fontSizeSlider.addEventListener('input', () => {
+    fontSizeVal.textContent = fontSizeSlider.value;
+    document.documentElement.style.setProperty('--base-size', fontSizeSlider.value + 'px');
+  });
+  ttsRateSlider.addEventListener('input',  () => ttsRateVal.textContent  = ttsRateSlider.value);
+  ttsPitchSlider.addEventListener('input', () => ttsPitchVal.textContent = ttsPitchSlider.value);
+
+  // Live theme preview
+  document.querySelectorAll('input[name="theme"]').forEach(r => {
+    r.addEventListener('change', () => {
+      if (r.value === 'default') document.documentElement.removeAttribute('data-theme');
+      else document.documentElement.setAttribute('data-theme', r.value);
+    });
+  });
+
+  // Live font preview
+  document.querySelectorAll('input[name="fontFamily"]').forEach(r => {
+    r.addEventListener('change', () => {
+      if (r.value === 'dyslexia') document.documentElement.setAttribute('data-font','dyslexia');
+      else document.documentElement.removeAttribute('data-font');
+    });
+  });
+
+  // Save
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const theme      = document.querySelector('input[name="theme"]:checked').value;
+    const fontFamily = document.querySelector('input[name="fontFamily"]:checked').value;
+    SS.save({
+      fontSize:   parseInt(fontSizeSlider.value),
+      theme,
+      fontFamily,
+      ttsRate:    parseFloat(ttsRateSlider.value),
+      ttsPitch:   parseFloat(ttsPitchSlider.value),
+      vibration:  document.getElementById('setVibration').checked,
+    });
+    confirmEl.style.display = 'flex';
+    setTimeout(() => confirmEl.style.display = 'none', 3500);
+    SS.announce('Settings saved and applied.');
+  });
+
+  // Reset
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    SS.reset();
+    loadForm();
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.removeAttribute('data-font');
+    SS.announce('Settings reset to defaults.');
+  });
+
+  // Test voice
+  document.getElementById('testVoiceBtn').addEventListener('click', () => {
+    if (!window.speechSynthesis) { SS.announce('TTS not supported.','assertive'); return; }
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance('Hello. This is how SixthSense will read text aloud with your current settings.');
+    utt.rate  = parseFloat(ttsRateSlider.value);
+    utt.pitch = parseFloat(ttsPitchSlider.value);
+    window.speechSynthesis.speak(utt);
+  });
+})();
+</script>
+{% endblock %}

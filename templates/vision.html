@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+{% block title %}VisionAssist — Image Text Reader{% endblock %}
+
+{% block content %}
+<div class="feature-hero">
+  <div class="container">
+    <span class="feature-tag"><i class="bi bi-image-fill" aria-hidden="true"></i> Feature 03 · VisionAssist</span>
+    <h1>Image Text Reader</h1>
+    <p class="text-muted mt-2" style="max-width:54ch;">
+      Upload a photo of any printed text — a sign, book page, handout, or label —
+      and VisionAssist will extract and read it back to you instantly.
+    </p>
+  </div>
+</div>
+
+<div class="container" style="padding-top:2rem; padding-bottom:3rem;">
+
+  <div class="grid-2" style="align-items:start; gap:2rem;">
+
+    <!-- Left: upload + preview -->
+    <div>
+      <div class="card" style="height:auto;">
+        <h2 style="font-size:.85rem; color:var(--teal); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:1rem;">
+          <i class="bi bi-upload" aria-hidden="true"></i> Upload Image
+        </h2>
+
+        <!-- Drop zone -->
+        <div id="dropZone"
+             style="border:2px dashed var(--border-2); border-radius:var(--radius); padding:2.5rem 1.5rem;
+                    text-align:center; cursor:pointer; transition:border-color var(--t), background var(--t);"
+             role="button"
+             tabindex="0"
+             aria-label="Click or drag and drop an image to upload"
+             aria-describedby="dropHint">
+          <i class="bi bi-image" aria-hidden="true" style="font-size:2.5rem; color:var(--text-3); display:block; margin-bottom:.75rem;"></i>
+          <p style="color:var(--text-2); margin:0; font-size:.95rem;">
+            Drag &amp; drop an image here, or <span style="color:var(--teal); font-weight:600;">click to browse</span>
+          </p>
+          <p id="dropHint" style="color:var(--text-3); font-size:.8rem; margin-top:.4rem;">
+            JPG, PNG, WEBP — photos of text work best
+          </p>
+        </div>
+
+        <!-- Hidden file input — triggered by drop zone click -->
+        <input type="file" id="imageInput" accept="image/*"
+               style="display:none;"
+               aria-label="Choose image file" />
+
+        <!-- Image preview -->
+        <div id="previewWrap" style="display:none; margin-top:1rem;">
+          <img id="imagePreview"
+               alt="Uploaded image preview"
+               style="width:100%; border-radius:var(--radius); border:2px solid var(--border); max-height:320px; object-fit:contain; background:#000;" />
+        </div>
+
+        <!-- Scan button -->
+        <button id="scanBtn" class="btn btn-amber mt-3"
+                style="width:100%; justify-content:center; font-size:1rem;"
+                disabled aria-disabled="true">
+          <i class="bi bi-viewfinder" aria-hidden="true"></i> Extract Text
+        </button>
+
+        <!-- OCR status / progress -->
+        <div id="ocrStatus" aria-live="polite"
+             style="margin-top:.75rem; font-size:.875rem; color:var(--text-2); font-family:var(--font-mono); min-height:1.4rem;"></div>
+      </div>
+
+      <!-- Tips card -->
+      <div class="card mt-3" style="height:auto;">
+        <h3 style="font-size:.85rem; color:var(--teal); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.75rem;">
+          <i class="bi bi-lightbulb-fill" aria-hidden="true"></i> Tips for Best Results
+        </h3>
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:.5rem; font-size:.875rem; color:var(--text-2);">
+          <li><i class="bi bi-check-circle text-teal" aria-hidden="true" style="margin-right:.4rem;"></i> Take the photo straight-on, not at an angle</li>
+          <li><i class="bi bi-check-circle text-teal" aria-hidden="true" style="margin-right:.4rem;"></i> Good lighting — avoid shadows across the text</li>
+          <li><i class="bi bi-check-circle text-teal" aria-hidden="true" style="margin-right:.4rem;"></i> Works on book pages, signs, handouts, labels, menus</li>
+          <li><i class="bi bi-check-circle text-teal" aria-hidden="true" style="margin-right:.4rem;"></i> Higher resolution photos give better accuracy</li>
+          <li><i class="bi bi-check-circle text-teal" aria-hidden="true" style="margin-right:.4rem;"></i> On mobile: tap the upload area to use your camera directly</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right: output + display + TTS -->
+    <div style="display:flex; flex-direction:column; gap:1.25rem;">
+
+      <!-- Extracted text output -->
+      <div class="card" style="height:auto;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem;">
+          <h2 style="font-size:.85rem; color:var(--teal); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin:0;">
+            <i class="bi bi-file-text-fill" aria-hidden="true"></i> Extracted Text
+          </h2>
+          <div class="flex gap-2">
+            <button id="copyBtn" class="btn btn-ghost" style="font-size:.8rem; padding:.35rem .75rem; min-height:36px;">
+              <i class="bi bi-clipboard" aria-hidden="true"></i> Copy
+            </button>
+            <button id="clearBtn" class="btn btn-ghost" style="font-size:.8rem; padding:.35rem .75rem; min-height:36px;">
+              <i class="bi bi-trash" aria-hidden="true"></i> Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- [A11Y] aria-live announces extracted text to screen readers -->
+        <div id="textOutput"
+             class="read-output"
+             tabindex="0"
+             aria-live="polite"
+             aria-label="Extracted text output"
+             style="min-height:160px;">
+          <p style="color:var(--text-3); font-style:italic; font-size:.9rem;">
+            Extracted text will appear here after you upload and scan an image.
+          </p>
+        </div>
+      </div>
+
+      <!-- Display options -->
+      <div class="card" style="height:auto;">
+        <h2 style="font-size:.85rem; color:var(--teal); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:1rem;">
+          <i class="bi bi-sliders" aria-hidden="true"></i> Display Mode
+        </h2>
+        <fieldset>
+          <legend class="visually-hidden">Text display mode</legend>
+          <div class="flex flex-wrap gap-3 mb-3">
+            <label><input type="radio" name="vDisplayMode" value="default" checked /> Default</label>
+            <label><input type="radio" name="vDisplayMode" value="contrast" /> High Contrast</label>
+            <label><input type="radio" name="vDisplayMode" value="dyslexia" /> Dyslexia Friendly</label>
+          </div>
+        </fieldset>
+        <div class="mb-3">
+          <label for="vFontSize" class="form-label">Font Size: <span id="vFontSizeVal" class="text-teal mono">18</span>px</label>
+          <input type="range" id="vFontSize" min="12" max="48" step="1" value="18" />
+        </div>
+        <div>
+          <label for="vLineHeight" class="form-label">Line Spacing: <span id="vLineHeightVal" class="text-teal mono">1.9</span></label>
+          <input type="range" id="vLineHeight" min="1.2" max="3.0" step="0.1" value="1.9" />
+        </div>
+      </div>
+
+      <!-- TTS -->
+      <div class="card" style="height:auto;">
+        <h2 style="font-size:.85rem; color:var(--teal); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:1rem;">
+          <i class="bi bi-volume-up-fill" aria-hidden="true"></i> Read Aloud
+        </h2>
+        <div class="mb-3">
+          <label for="vTtsRate" class="form-label">Speed: <span id="vTtsRateVal" class="text-teal mono">1.0</span>×</label>
+          <input type="range" id="vTtsRate" min="0.5" max="2.0" step="0.1" value="1.0" />
+        </div>
+        <div class="mb-3">
+          <label for="vTtsPitch" class="form-label">Pitch: <span id="vTtsPitchVal" class="text-teal mono">1.0</span></label>
+          <input type="range" id="vTtsPitch" min="0.5" max="2.0" step="0.1" value="1.0" />
+        </div>
+        <div class="mb-3">
+          <label for="vTtsVoice" class="form-label">Voice</label>
+          <select id="vTtsVoice"><option value="">Default voice</option></select>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button id="speakBtn" class="btn btn-primary" style="font-size:.9rem;">
+            <i class="bi bi-play-fill" aria-hidden="true"></i> Read Aloud
+          </button>
+          <button id="pauseBtn" class="btn btn-secondary" style="font-size:.9rem;" disabled aria-disabled="true">
+            <i class="bi bi-pause-fill" aria-hidden="true"></i> Pause
+          </button>
+          <button id="stopBtn" class="btn btn-ghost" style="font-size:.9rem;" disabled aria-disabled="true">
+            <i class="bi bi-stop-fill" aria-hidden="true"></i> Stop
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Tesseract.js — real OCR, runs 100% in browser, no data sent anywhere -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+/**
+ * VisionAssist — Image Upload OCR + Display + TTS
+ * ================================================
+ * Pipeline:
+ *   User uploads image → FileReader → <img> preview
+ *   → preprocessImage() → greyscale + contrast on offscreen <canvas>
+ *   → Tesseract.recognize() → extracted text
+ *   → setOutputText() → display with chosen mode & font size
+ *   → SpeechSynthesis reads it aloud on demand
+ *
+ * Still images give Tesseract far more accuracy than live video —
+ * no motion blur, user-controlled lighting, higher resolution.
+ *
+ * [A11Y] textOutput has aria-live="polite" — screen readers
+ *        announce extracted text automatically after scan.
+ */
+(function () {
+  // ── Element refs ──────────────────────────────────────────────────────────
+  const dropZone    = document.getElementById('dropZone');
+  const imageInput  = document.getElementById('imageInput');
+  const previewWrap = document.getElementById('previewWrap');
+  const imgPreview  = document.getElementById('imagePreview');
+  const scanBtn     = document.getElementById('scanBtn');
+  const ocrStatus   = document.getElementById('ocrStatus');
+  const textOutput  = document.getElementById('textOutput');
+  const copyBtn     = document.getElementById('copyBtn');
+  const clearBtn    = document.getElementById('clearBtn');
+  const fontSlider  = document.getElementById('vFontSize');
+  const fontVal     = document.getElementById('vFontSizeVal');
+  const lhSlider    = document.getElementById('vLineHeight');
+  const lhVal       = document.getElementById('vLineHeightVal');
+  const speakBtn    = document.getElementById('speakBtn');
+  const pauseBtn    = document.getElementById('pauseBtn');
+  const stopTtsBtn  = document.getElementById('stopBtn');
+  const voiceSel    = document.getElementById('vTtsVoice');
+  const rateSlider  = document.getElementById('vTtsRate');
+  const pitchSlider = document.getElementById('vTtsPitch');
+  const rateVal     = document.getElementById('vTtsRateVal');
+  const pitchVal    = document.getElementById('vTtsPitchVal');
+
+  const synth = window.speechSynthesis;
+  let loadedImage = null; // holds the Image object ready for OCR
+
+  // ── Voice loader ───────────────────────────────────────────────────────────
+  function loadVoices() {
+    const voices = synth ? synth.getVoices() : [];
+    voiceSel.innerHTML = '<option value="">Default voice</option>';
+    voices.forEach((v, i) => {
+      const o = document.createElement('option');
+      o.value = i;
+      o.textContent = `${v.name} (${v.lang})`;
+      voiceSel.appendChild(o);
+    });
+  }
+  loadVoices();
+  if (synth && speechSynthesis.onvoiceschanged !== undefined)
+    speechSynthesis.onvoiceschanged = loadVoices;
+
+  // ── Slider feedback ────────────────────────────────────────────────────────
+  rateSlider.addEventListener('input',  () => rateVal.textContent  = rateSlider.value);
+  pitchSlider.addEventListener('input', () => pitchVal.textContent = pitchSlider.value);
+  fontSlider.addEventListener('input',  () => { fontVal.textContent = fontSlider.value; applyDisplay(); });
+  lhSlider.addEventListener('input',   () => { lhVal.textContent   = lhSlider.value;   applyDisplay(); });
+
+  // ── Drop zone interactions ─────────────────────────────────────────────────
+  dropZone.addEventListener('click', () => imageInput.click());
+  dropZone.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); imageInput.click(); }
+  });
+
+  // Drag over styling
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.style.borderColor = 'var(--teal)';
+    dropZone.style.background  = 'var(--teal-glow)';
+  });
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.style.borderColor = '';
+    dropZone.style.background  = '';
+  });
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.style.borderColor = '';
+    dropZone.style.background  = '';
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) loadFile(file);
+  });
+
+  imageInput.addEventListener('change', () => {
+    if (imageInput.files[0]) loadFile(imageInput.files[0]);
+  });
+
+  // ── Load and preview image ─────────────────────────────────────────────────
+  function loadFile(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        loadedImage = img;
+        imgPreview.src = e.target.result;
+        previewWrap.style.display = 'block';
+        scanBtn.disabled = false;
+        scanBtn.setAttribute('aria-disabled', 'false');
+        ocrStatus.textContent = 'Image loaded — press Extract Text to scan.';
+        ocrStatus.style.color = 'var(--text-2)';
+        SS.announce('Image loaded. Press Extract Text to scan for text.');
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── Image preprocessor ─────────────────────────────────────────────────────
+  /**
+   * preprocessImage(img)
+   * Converts uploaded image to high-contrast greyscale before OCR.
+   * Still images allow us to upscale aggressively (3×) since there's
+   * no motion blur concern — giving Tesseract far more detail to work with.
+   *
+   * Steps:
+   *  1. Draw image onto offscreen canvas at 3× size
+   *  2. Read every pixel
+   *  3. Convert RGB → luminance (greyscale)
+   *  4. Binary threshold at 128: bright pixels → white, dark → black
+   *  5. Return as PNG data URL
+   */
+  function preprocessImage(img) {
+    const SCALE = 3;
+    const w = img.naturalWidth  * SCALE;
+    const h = img.naturalHeight * SCALE;
+
+    const canvas = document.createElement('canvas');
+    canvas.width  = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+
+    const imgData = ctx.getImageData(0, 0, w, h);
+    const px = imgData.data;
+
+    for (let i = 0; i < px.length; i += 4) {
+      const lum = 0.299 * px[i] + 0.587 * px[i+1] + 0.114 * px[i+2];
+      const val = lum > 128 ? 255 : 0;
+      px[i] = px[i+1] = px[i+2] = val;
+      // px[i+3] = alpha, leave as-is
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+    return canvas.toDataURL('image/png');
+  }
+
+  // ── OCR scan ───────────────────────────────────────────────────────────────
+  scanBtn.addEventListener('click', async () => {
+    if (!loadedImage) return;
+
+    const processedImage = preprocessImage(loadedImage);
+
+    scanBtn.disabled = true;
+    scanBtn.innerHTML = '<i class="bi bi-hourglass-split" aria-hidden="true"></i> Extracting…';
+    ocrStatus.style.color = 'var(--text-2)';
+    ocrStatus.textContent = 'Starting OCR engine…';
+    SS.announce('Extracting text. Please wait.');
+
+    try {
+      const result = await Tesseract.recognize(processedImage, 'eng', {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            ocrStatus.textContent = `Reading… ${Math.round(m.progress * 100)}%`;
+          }
+        },
+        tessedit_pageseg_mode: '6',
+        preserve_interword_spaces: '1',
+      });
+
+      // Clean up common OCR artefacts
+      const text = result.data.text
+        .replace(/[|]/g, 'I')        // pipe → capital I
+        .replace(/\f/g, '\n')        // form feeds → newline
+        .replace(/\n{3,}/g, '\n\n') // collapse excess blank lines
+        .trim();
+
+      if (!text || text.length < 2) {
+        ocrStatus.style.color = 'var(--amber)';
+        ocrStatus.textContent = 'No text found — try a clearer photo with better lighting.';
+        SS.announce('No text detected. Try a clearer image.', 'assertive');
+      } else {
+        setOutputText(text);
+        const wordCount = text.split(/\s+/).filter(Boolean).length;
+        ocrStatus.style.color = 'var(--cyan)';
+        ocrStatus.textContent = `✓ ${wordCount} word${wordCount !== 1 ? 's' : ''} extracted`;
+        SS.announce(`Text extracted — ${wordCount} words found. Press Read Aloud to listen.`);
+        SS.vibrate([80, 40, 80]);
+      }
+    } catch (err) {
+      ocrStatus.style.color = 'var(--orange)';
+      ocrStatus.textContent = 'Extraction failed — please try again.';
+      SS.announce('Extraction failed. Please try again.', 'assertive');
+    } finally {
+      scanBtn.disabled = false;
+      scanBtn.innerHTML = '<i class="bi bi-viewfinder" aria-hidden="true"></i> Extract Text';
+    }
+  });
+
+  // ── Display helpers ────────────────────────────────────────────────────────
+  function getMode() {
+    return document.querySelector('input[name="vDisplayMode"]:checked').value;
+  }
+
+  function setOutputText(text) {
+    const mode = getMode();
+    textOutput.className   = 'read-output';
+    textOutput.style.cssText = '';
+    textOutput.textContent   = text;
+    textOutput.style.fontSize   = fontSlider.value + 'px';
+    textOutput.style.lineHeight = lhSlider.value;
+    if (mode === 'contrast') textOutput.classList.add('mode-contrast');
+    if (mode === 'dyslexia') textOutput.classList.add('mode-dyslexia');
+  }
+
+  function applyDisplay() {
+    const text = textOutput.innerText.trim();
+    if (!text || text.includes('Extracted text will appear')) return;
+    setOutputText(text);
+  }
+
+  document.querySelectorAll('input[name="vDisplayMode"]').forEach(r =>
+    r.addEventListener('change', applyDisplay));
+
+  // ── Copy / Clear ───────────────────────────────────────────────────────────
+  copyBtn.addEventListener('click', () => {
+    const text = textOutput.innerText.trim();
+    if (!text || text.includes('Extracted text will appear')) {
+      SS.announce('Nothing to copy yet.'); return;
+    }
+    navigator.clipboard.writeText(text)
+      .then(() => SS.announce('Text copied to clipboard.'))
+      .catch(() => SS.announce('Copy failed — please select text manually.', 'assertive'));
+  });
+
+  clearBtn.addEventListener('click', () => {
+    textOutput.className   = 'read-output';
+    textOutput.style.cssText = '';
+    textOutput.innerHTML   = '<p style="color:var(--text-3); font-style:italic; font-size:.9rem;">Extracted text will appear here after you upload and scan an image.</p>';
+    previewWrap.style.display = 'none';
+    imgPreview.src = '';
+    imageInput.value = '';
+    loadedImage = null;
+    scanBtn.disabled = true;
+    scanBtn.setAttribute('aria-disabled', 'true');
+    ocrStatus.textContent = '';
+    if (synth) synth.cancel();
+    setTtsState(false);
+    SS.announce('Cleared.');
+  });
+
+  // ── TTS ────────────────────────────────────────────────────────────────────
+  function setTtsState(speaking) {
+    speakBtn.disabled   =  speaking; speakBtn.setAttribute('aria-disabled',   speaking ? 'true' : 'false');
+    pauseBtn.disabled   = !speaking; pauseBtn.setAttribute('aria-disabled',  !speaking ? 'true' : 'false');
+    stopTtsBtn.disabled = !speaking; stopTtsBtn.setAttribute('aria-disabled', !speaking ? 'true' : 'false');
+  }
+
+  speakBtn.addEventListener('click', () => {
+    if (!synth) { SS.announce('Text-to-speech not supported.', 'assertive'); return; }
+    synth.cancel();
+    const text = textOutput.innerText.trim();
+    if (!text || text.includes('Extracted text will appear')) {
+      SS.announce('Extract text from an image first.', 'assertive'); return;
+    }
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.rate  = parseFloat(rateSlider.value);
+    utt.pitch = parseFloat(pitchSlider.value);
+    if (voiceSel.value !== '') utt.voice = synth.getVoices()[parseInt(voiceSel.value)];
+    utt.onend  = () => { setTtsState(false); SS.announce('Reading finished.'); };
+    utt.onerror = () => setTtsState(false);
+    synth.speak(utt);
+    setTtsState(true);
+    SS.announce('Reading aloud.');
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    if (synth.speaking && !synth.paused) {
+      synth.pause();
+      pauseBtn.innerHTML = '<i class="bi bi-play-fill" aria-hidden="true"></i> Resume';
+      SS.announce('Paused.');
+    } else if (synth.paused) {
+      synth.resume();
+      pauseBtn.innerHTML = '<i class="bi bi-pause-fill" aria-hidden="true"></i> Pause';
+      SS.announce('Resumed.');
+    }
+  });
+
+  stopTtsBtn.addEventListener('click', () => {
+    synth.cancel();
+    setTtsState(false);
+    SS.announce('Stopped.');
+  });
+})();
+</script>
+{% endblock %}

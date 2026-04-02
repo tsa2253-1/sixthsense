@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SixthSense — Extending human perception for individuals with hearing and vision disabilities. Free, private, and accessible to all." />
+  <title>{% block title %}SixthSense{% endblock %} · Extending Human Perception</title>
+
+  <!-- Preconnect for font performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Bootstrap Icons (icons only, no layout dependency) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+
+  {#
+    [A11Y] Settings pre-paint injection.
+    Runs synchronously before any HTML renders, preventing a flash of the
+    wrong theme / font-size when the user has saved preferences.
+  #}
+  <script>
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('ssSettings') || '{}');
+        var r = document.documentElement;
+        if (s.fontSize) r.style.setProperty('--base-size', s.fontSize + 'px');
+        if (s.theme && s.theme !== 'default') r.setAttribute('data-theme', s.theme);
+        if (s.fontFamily === 'dyslexia') r.setAttribute('data-font', 'dyslexia');
+      } catch(e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  {# [A11Y] Skip link — first focusable element on every page #}
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  {# [A11Y] Flash overlay for SafeAlert — aria-hidden, controlled to ≤3 flashes #}
+  <div id="flashOverlay" aria-hidden="true"></div>
+
+  {# [A11Y] role="banner" navigation landmark #}
+  <header class="site-header" role="banner">
+    <nav class="navbar container" aria-label="Primary navigation">
+      <a href="{{ url_for('index') }}" class="brand" aria-label="SixthSense — Home">
+        <div class="brand-mark" aria-hidden="true">
+          <i class="bi bi-eye"></i>
+        </div>
+        <span class="brand-name">Sixth<span>Sense</span></span>
+      </a>
+
+      {# [A11Y] aria-expanded on hamburger reflects menu state #}
+      <button class="nav-toggle" id="navToggle"
+              aria-controls="navLinks"
+              aria-expanded="false"
+              aria-label="Toggle navigation menu">
+        <i class="bi bi-list" aria-hidden="true"></i>
+      </button>
+
+      <ul class="nav-links" id="navLinks" role="list">
+        <li role="listitem">
+          <a href="{{ url_for('index') }}"
+             {% if request.endpoint == 'index' %}class="active" aria-current="page"{% endif %}>
+            <i class="bi bi-house-fill" aria-hidden="true"></i> Home
+          </a>
+        </li>
+        <li role="listitem">
+          <a href="{{ url_for('caption') }}"
+             {% if request.endpoint == 'caption' %}class="active" aria-current="page"{% endif %}>
+            <i class="bi bi-mic-fill" aria-hidden="true"></i> SpeakAssist
+          </a>
+        </li>
+        <li role="listitem">
+          <a href="{{ url_for('read') }}"
+             {% if request.endpoint == 'read' %}class="active" aria-current="page"{% endif %}>
+            <i class="bi bi-book-fill" aria-hidden="true"></i> ReadAssist
+          </a>
+        </li>
+        <li role="listitem">
+          <a href="{{ url_for('vision') }}"
+             {% if request.endpoint == 'vision' %}class="active" aria-current="page"{% endif %}>
+            <i class="bi bi-camera-fill" aria-hidden="true"></i> VisionAssist
+          </a>
+        </li>
+        <li role="listitem">
+          <a href="{{ url_for('alerts') }}"
+             {% if request.endpoint == 'alerts' %}class="active" aria-current="page"{% endif %}>
+            <i class="bi bi-bell-fill" aria-hidden="true"></i> AdvancedAlert
+          </a>
+        </li>
+        <li role="listitem">
+          <a href="{{ url_for('settings') }}"
+             {% if request.endpoint == 'settings' %}class="active" aria-current="page"{% endif %}>
+            <i class="bi bi-sliders" aria-hidden="true"></i> Settings
+          </a>
+        </li>
+        <li role="listitem">
+          <a href="{{ url_for('about') }}"
+             {% if request.endpoint == 'about' %}class="active" aria-current="page"{% endif %}>
+            <i class="bi bi-info-circle-fill" aria-hidden="true"></i> About
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  {# [A11Y] role="main" landmark; tabindex="-1" allows skip-link to focus it #}
+  <main id="main-content" role="main" tabindex="-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  {# [A11Y] role="contentinfo" footer landmark #}
+  <footer class="site-footer" role="contentinfo">
+    <div class="container" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem; align-items:center;">
+      <p class="mb-0">
+        <strong style="color:var(--teal);">SixthSense</strong> — Built with empathy. Designed for everyone.
+      </p>
+      <p class="mb-0">
+        No data collected &nbsp;·&nbsp; No ads &nbsp;·&nbsp; No tracking &nbsp;·&nbsp;
+        <a href="{{ url_for('about') }}">Accessibility commitment</a>
+      </p>
+    </div>
+  </footer>
+
+  {#
+    [A11Y] Dual aria-live regions:
+    - polite: for non-urgent announcements (feature status changes)
+    - assertive: for urgent announcements (errors, emergency alerts)
+  #}
+  <div id="ss-polite-live" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
+  <div id="ss-alert-live" aria-live="assertive" aria-atomic="true" class="visually-hidden"></div>
+
+  <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

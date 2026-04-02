@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% block title %}SpeakAssist{% endblock %}
+
+{% block content %}
+<div class="feature-hero">
+  <div class="container">
+    <span class="feature-tag"><i class="bi bi-mic-fill" aria-hidden="true"></i> Feature 01 · SpeakAssist</span>
+    <h1>Real-Time Captions</h1>
+    <p class="text-muted mt-2" style="max-width:50ch;">
+      Speech converted to text, live. For students, professionals, and anyone
+      who needs to read what others are saying.
+    </p>
+  </div>
+</div>
+
+<div class="container" style="padding-top:2rem; padding-bottom:3rem;">
+  <div class="grid-2" style="align-items:start; gap:2rem;">
+
+    <!-- Main panel -->
+    <div>
+      <!-- Status -->
+      <div class="flex items-center gap-3 mb-3" role="status" aria-live="polite">
+        <span id="statusBadge" class="status status-off">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText">Not Listening</span>
+        </span>
+        <span id="listeningPulse" style="display:none; color:var(--cyan); font-size:.85rem; font-family:var(--font-mono);">
+          ● Detecting speech…
+        </span>
+      </div>
+
+      <!-- Caption output — aria-live for screen readers, role=log for history -->
+      <div id="captionBox"
+           class="caption-box"
+           role="log"
+           aria-live="polite"
+           aria-label="Caption output"
+           aria-atomic="false"
+           tabindex="0">
+        <p class="caption-placeholder" id="capPlaceholder" aria-hidden="true">
+          Press <strong>Start Listening</strong> and speak.
+        </p>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex flex-wrap gap-3 mt-3" role="group" aria-label="Caption controls">
+        <button id="startBtn" class="btn btn-primary" aria-pressed="false">
+          <i class="bi bi-mic-fill" aria-hidden="true"></i> Start Listening
+        </button>
+        <button id="stopBtn" class="btn btn-secondary" disabled aria-disabled="true">
+          <i class="bi bi-stop-fill" aria-hidden="true"></i> Stop
+        </button>
+        <button id="clearBtn" class="btn btn-ghost">
+          <i class="bi bi-trash" aria-hidden="true"></i> Clear
+        </button>
+        <button id="copyBtn" class="btn btn-ghost">
+          <i class="bi bi-clipboard" aria-hidden="true"></i> Copy
+        </button>
+      </div>
+
+      <!-- Error -->
+      <div id="captionError" role="alert" aria-live="assertive" style="display:none; margin-top:1rem; padding:.75rem 1rem; border-left:3px solid var(--orange); background:var(--orange-glow); border-radius:0 var(--radius-sm) var(--radius-sm) 0; color:var(--text);"></div>
+    </div>
+
+    <!-- Options sidebar -->
+    <div>
+      <div class="card">
+        <p class="panel-title settings-panel" style="background:transparent; border:none; padding:0; margin-bottom:1rem;">
+          <i class="bi bi-sliders" aria-hidden="true"></i> Display Options
+        </p>
+
+        <!-- Font size -->
+        <div class="mb-4">
+          <label for="capFontSize" class="form-label">
+            Caption Size: <span id="capFontSizeVal" class="text-teal mono">1.35</span>rem
+          </label>
+          <input type="range" id="capFontSize" min="1" max="3" step="0.05" value="1.35"
+                 aria-label="Caption font size" />
+        </div>
+
+        <!-- Colour mode -->
+        <fieldset class="mb-4">
+          <legend class="form-label" style="margin-bottom:.5rem;">Caption Colour</legend>
+          <div class="flex flex-wrap gap-3">
+            <label><input type="radio" name="capColour" value="default" checked /> Default</label>
+            <label><input type="radio" name="capColour" value="hc" /> High Contrast</label>
+            <label><input type="radio" name="capColour" value="dark" /> Dark</label>
+          </div>
+        </fieldset>
+
+        <!-- Speaker label -->
+        <div class="mb-4">
+          <label for="speakerName" class="form-label">Speaker Label <span class="text-dim">(optional)</span></label>
+          <input type="text" id="speakerName" placeholder="e.g. Prof. Lee" maxlength="30" />
+          <p class="form-hint">Prepended to each caption block.</p>
+        </div>
+
+        <!-- Language -->
+        <div class="mb-4">
+          <label for="capLang" class="form-label">Recognition Language</label>
+          <select id="capLang" aria-label="Speech recognition language">
+            <option value="en-US">English (US)</option>
+            <option value="en-GB">English (UK)</option>
+            <option value="es-ES">Español</option>
+            <option value="fr-FR">Français</option>
+            <option value="de-DE">Deutsch</option>
+            <option value="zh-CN">中文 (普通话)</option>
+            <option value="ar-SA">العربية</option>
+          </select>
+        </div>
+
+        <!-- Vibrate -->
+        <label>
+          <input type="checkbox" id="capVibrate" checked />
+          Vibrate on speech detected
+        </label>
+      </div>
+
+      <!-- How it helps -->
+      <div class="card mt-3">
+        <h3 style="font-size:1rem; color:var(--teal); margin-bottom:.75rem;">
+          <i class="bi bi-lightbulb-fill" aria-hidden="true"></i> How SpeakAssist Helps
+        </h3>
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:.5rem;">
+          <li style="display:flex; gap:.6rem; font-size:.9rem; color:var(--text-2);">
+            <i class="bi bi-mortarboard-fill text-teal" aria-hidden="true"></i>
+            Follow live lectures without a sign-language interpreter
+          </li>
+          <li style="display:flex; gap:.6rem; font-size:.9rem; color:var(--text-2);">
+            <i class="bi bi-people-fill text-teal" aria-hidden="true"></i>
+            Participate fully in meetings and group conversations
+          </li>
+          <li style="display:flex; gap:.6rem; font-size:.9rem; color:var(--text-2);">
+            <i class="bi bi-telephone-fill text-teal" aria-hidden="true"></i>
+            Hold phone near speaker to caption calls
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+/**
+ * SpeakAssist — Web Speech API Controller
+ * [A11Y] SpeechRecognition provides live captions.
+ *        Falls back with a clear accessible error if unsupported.
+ *        aria-live="polite" on captionBox announces updates to screen readers.
+ */
+(function () {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const box        = document.getElementById('captionBox');
+  const placeholder= document.getElementById('capPlaceholder');
+  const startBtn   = document.getElementById('startBtn');
+  const stopBtn    = document.getElementById('stopBtn');
+  const clearBtn   = document.getElementById('clearBtn');
+  const copyBtn    = document.getElementById('copyBtn');
+  const badge      = document.getElementById('statusBadge');
+  const statusText = document.getElementById('statusText');
+  const pulse      = document.getElementById('listeningPulse');
+  const errDiv     = document.getElementById('captionError');
+  const fontSlider = document.getElementById('capFontSize');
+  const fontVal    = document.getElementById('capFontSizeVal');
+  const speakerIn  = document.getElementById('speakerName');
+  const langSel    = document.getElementById('capLang');
+
+  let recog = null, listening = false, transcript = '';
+
+  if (!SR) {
+    showError('SpeakAssist requires the Web Speech API. Please use Chrome or Edge on desktop.');
+    startBtn.disabled = true;
+    startBtn.setAttribute('aria-disabled','true');
+    return;
+  }
+
+  function buildRecog() {
+    const r = new SR();
+    r.continuous = true;
+    r.interimResults = true;
+    r.lang = langSel.value;
+
+    r.onstart = () => {
+      listening = true;
+      setStatus(true);
+      SS.announce('SpeakAssist started. Listening for speech.');
+      if (document.getElementById('capVibrate').checked) SS.vibrate([80]);
+    };
+
+    r.onend = () => { if (listening) r.start(); };
+
+    r.onerror = e => {
+      if (e.error === 'not-allowed')
+        showError('Microphone access denied. Please allow microphone permissions and try again.');
+      else if (e.error !== 'no-speech')
+        showError('Recognition error: ' + e.error);
+    };
+
+    r.onresult = e => {
+      placeholder.style.display = 'none';
+      pulse.style.display = 'inline';
+      if (document.getElementById('capVibrate').checked) SS.vibrate([40]);
+
+      let final = '', interim = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) final += e.results[i][0].transcript;
+        else interim += e.results[i][0].transcript;
+      }
+
+      if (final) {
+        const label = speakerIn.value.trim();
+        transcript += (label ? `<strong style="color:var(--teal)">${esc(label)}:</strong> ` : '') + esc(final) + ' ';
+      }
+
+      box.innerHTML = transcript +
+        (interim ? `<span style="color:var(--text-3); font-style:italic;">${esc(interim)}</span>` : '');
+      box.scrollTop = box.scrollHeight;
+    };
+    return r;
+  }
+
+  function setStatus(on) {
+    badge.className = 'status ' + (on ? 'status-on' : 'status-off');
+    statusText.textContent = on ? 'Listening' : 'Not Listening';
+    startBtn.disabled = on; startBtn.setAttribute('aria-disabled', on ? 'true' : 'false');
+    startBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    stopBtn.disabled = !on; stopBtn.setAttribute('aria-disabled', on ? 'false' : 'true');
+    box.classList.toggle('listening', on);
+    if (!on) pulse.style.display = 'none';
+  }
+
+  function showError(msg) {
+    errDiv.style.display = 'block';
+    errDiv.textContent = msg;
+    SS.announce(msg, 'assertive');
+  }
+
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  startBtn.addEventListener('click', () => {
+    errDiv.style.display = 'none';
+    recog = buildRecog();
+    recog.start();
+  });
+
+  stopBtn.addEventListener('click', () => {
+    listening = false;
+    if (recog) recog.stop();
+    setStatus(false);
+    SS.announce('SpeakAssist stopped.');
+  });
+
+  clearBtn.addEventListener('click', () => {
+    transcript = '';
+    box.innerHTML = '';
+    placeholder.style.display = '';
+    SS.announce('Captions cleared.');
+  });
+
+  copyBtn.addEventListener('click', () => {
+    const text = box.innerText.trim();
+    if (!text) { SS.announce('Nothing to copy.'); return; }
+    navigator.clipboard.writeText(text)
+      .then(() => SS.announce('Captions copied to clipboard.'))
+      .catch(() => SS.announce('Copy failed — please select and copy manually.', 'assertive'));
+  });
+
+  fontSlider.addEventListener('input', () => {
+    fontVal.textContent = fontSlider.value;
+    box.style.fontSize = fontSlider.value + 'rem';
+  });
+
+  document.querySelectorAll('input[name="capColour"]').forEach(r => {
+    r.addEventListener('change', () => {
+      box.style.background = box.style.color = '';
+      if (r.value === 'hc')   { box.style.background='#000'; box.style.color='#fff'; }
+      if (r.value === 'dark') { box.style.background='#0d1220'; box.style.color='#e8edf5'; }
+    });
+  });
+
+  langSel.addEventListener('change', () => {
+    if (listening && recog) { recog.stop(); recog = buildRecog(); recog.start(); }
+  });
+})();
+</script>
+{% endblock %}

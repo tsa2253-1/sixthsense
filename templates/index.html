@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero ──────────────────────────────────────────────────────────────── -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="container">
+    <p class="hero-eyebrow" aria-hidden="true">Accessibility · Perception · Independence</p>
+    <h1 id="hero-heading">
+      Technology is your<br>
+      <em>Sixth Sense.</em>
+    </h1>
+
+    <blockquote class="hero-blurb" aria-label="What is a sixth sense">
+      Humans evolved five senses to navigate the world. For millions of people,
+      one or more of those senses presents a barrier — not a limitation of the person,
+      but a limitation of their environment. <strong>SixthSense turns your device into
+      an extension of human perception</strong> — converting sound to text, text to
+      speech, visual scenes to audio descriptions, and silence to vibration. Your
+      computer becomes the sense you need it to be.
+    </blockquote>
+
+    <p class="hero-lead">
+      Five free, privacy-first tools for individuals with hearing and vision
+      impairments. No account. No data collected. No cost. Ever.
+    </p>
+
+    <div class="flex flex-wrap gap-3">
+      <a href="{{ url_for('caption') }}" class="btn btn-primary">
+        <i class="bi bi-arrow-right-circle-fill" aria-hidden="true"></i>
+        Start Using SixthSense
+      </a>
+      <a href="{{ url_for('about') }}" class="btn btn-secondary">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        Our Mission
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row" role="region" aria-label="Global disability statistics">
+      <div class="stat-item">
+        <div class="stat-num">430<span>M+</span></div>
+        <div class="stat-label">people with disabling hearing loss</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">253<span>M+</span></div>
+        <div class="stat-label">people with vision impairment</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num"><span>$</span>0</div>
+        <div class="stat-label">cost to use SixthSense</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">bytes of personal data stored</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Feature Grid ───────────────────────────────────────────────────────── -->
+<section class="section" aria-labelledby="features-heading">
+  <div class="container">
+    <p class="feature-tag" aria-hidden="true"><i class="bi bi-grid-3x3-gap-fill"></i> Five Tools</p>
+    <h2 id="features-heading" style="margin-bottom:2rem;">One platform. Every barrier.</h2>
+
+    <div class="feat-grid">
+
+      <article class="card card-accent-teal" aria-label="SpeakAssist — speech to text">
+        <div class="feat-icon feat-icon-teal">
+          <i class="bi bi-mic-fill" aria-hidden="true"></i>
+        </div>
+        <h3>SpeakAssist</h3>
+        <p class="text-muted" style="font-size:.95rem;">
+          Real-time speech-to-text captioning. Adjustable font size, colour modes,
+          speaker labelling, and 7 language options.
+        </p>
+        <div class="mt-3">
+          <a href="{{ url_for('caption') }}" class="btn btn-secondary" style="font-size:.875rem; padding:.55rem 1rem; min-height:40px;">
+            Open <i class="bi bi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
+
+      <article class="card card-accent-amber" aria-label="ReadAssist — text transformation">
+        <div class="feat-icon feat-icon-amber">
+          <i class="bi bi-book-fill" aria-hidden="true"></i>
+        </div>
+        <h3>ReadAssist</h3>
+        <p class="text-muted" style="font-size:.95rem;">
+          Transform any text into large-print, high-contrast, or dyslexia-friendly format.
+          Read it aloud with adjustable voice, speed, and pitch.
+        </p>
+        <div class="mt-3">
+          <a href="{{ url_for('read') }}" class="btn btn-ghost" style="font-size:.875rem; padding:.55rem 1rem; min-height:40px; color:var(--amber); border-color:var(--amber);">
+            Open <i class="bi bi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
+
+      <article class="card card-accent-cyan" aria-label="VisionAssist — camera OCR scanner">
+        <div class="feat-icon feat-icon-cyan">
+          <i class="bi bi-camera-fill" aria-hidden="true"></i>
+        </div>
+        <h3>VisionAssist</h3>
+        <p class="text-muted" style="font-size:.95rem;">
+          Point your camera at printed text — signs, books, handouts — and hear it
+          read aloud instantly. Real OCR runs entirely in your browser, no data sent anywhere.
+        </p>
+        <div class="mt-3">
+          <a href="{{ url_for('vision') }}" class="btn btn-ghost" style="font-size:.875rem; padding:.55rem 1rem; min-height:40px; color:var(--cyan); border-color:var(--cyan);">
+            Open <i class="bi bi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
+
+      <article class="card card-accent-teal" aria-label="AdvancedAlert — multimodal alerts" style="border-top-color:var(--orange);">
+        <div class="feat-icon feat-icon-orange">
+          <i class="bi bi-bell-fill" aria-hidden="true"></i>
+        </div>
+        <h3>AdvancedAlert</h3>
+        <p class="text-muted" style="font-size:.95rem;">
+          Multimodal alerts via screen flash, device vibration, spoken audio, and
+          text banners — all four channels at once, or pick what works for you.
+        </p>
+        <div class="mt-3">
+          <a href="{{ url_for('alerts') }}" class="btn btn-ghost" style="font-size:.875rem; padding:.55rem 1rem; min-height:40px; color:var(--orange); border-color:var(--orange);">
+            Open <i class="bi bi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
+
+      <article class="card" aria-label="Accessibility Settings Control Panel">
+        <div class="feat-icon" style="background:rgba(139,148,158,.12); color:var(--text-2);">
+          <i class="bi bi-sliders" aria-hidden="true"></i>
+        </div>
+        <h3>Control Panel</h3>
+        <p class="text-muted" style="font-size:.95rem;">
+          Font size, colour theme, TTS defaults, and output channel toggles.
+          Your preferences are saved locally — no server, no account.
+        </p>
+        <div class="mt-3">
+          <a href="{{ url_for('settings') }}" class="btn btn-ghost" style="font-size:.875rem; padding:.55rem 1rem; min-height:40px;">
+            Open <i class="bi bi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Why SixthSense ─────────────────────────────────────────────────────── -->
+<section class="section-sm" style="background:var(--bg-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);" aria-labelledby="why-heading">
+  <div class="container">
+    <div class="grid-2" style="gap:3rem; align-items:center;">
+      <div>
+        <h2 id="why-heading">Why one sense at a time isn't enough</h2>
+        <p class="text-muted mt-3">
+          Most accessibility tools solve a single problem. A captioning app for the deaf.
+          A screen reader for the blind. But real users live across multiple barriers,
+          in unpredictable environments.
+        </p>
+        <p class="text-muted mt-2">
+          SixthSense combines all five tools under one roof, with a unified settings system,
+          so users — and their families, teachers, or support workers — spend less time
+          configuring and more time doing.
+        </p>
+      </div>
+      <div class="grid-2" style="gap:.75rem;">
+        <div class="card" style="padding:1.25rem;">
+          <i class="bi bi-shield-check-fill text-teal" style="font-size:1.4rem;" aria-hidden="true"></i>
+          <h4 class="mt-2">WCAG 2.1 AA</h4>
+          <p class="text-muted" style="font-size:.85rem; margin-bottom:0;">Every page meets international web accessibility standards.</p>
+        </div>
+        <div class="card" style="padding:1.25rem;">
+          <i class="bi bi-lock-fill text-amber" style="font-size:1.4rem;" aria-hidden="true"></i>
+          <h4 class="mt-2">Zero Data</h4>
+          <p class="text-muted" style="font-size:.85rem; margin-bottom:0;">Preferences stay in your browser. Nothing touches a server.</p>
+        </div>
+        <div class="card" style="padding:1.25rem;">
+          <i class="bi bi-phone-fill" style="font-size:1.4rem; color:var(--cyan);" aria-hidden="true"></i>
+          <h4 class="mt-2">Mobile First</h4>
+          <p class="text-muted" style="font-size:.85rem; margin-bottom:0;">Responsive design with 48px touch targets throughout.</p>
+        </div>
+        <div class="card" style="padding:1.25rem;">
+          <i class="bi bi-currency-dollar text-amber" style="font-size:1.4rem;" aria-hidden="true"></i>
+          <h4 class="mt-2">Free Forever</h4>
+          <p class="text-muted" style="font-size:.85rem; margin-bottom:0;">No subscription, no freemium, no upsells. Free for everyone.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
