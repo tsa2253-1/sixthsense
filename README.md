@@ -12,7 +12,7 @@ Humans evolved five senses to navigate the world. For millions of people, one or
 **Requirements:** Python 3.8+, Chrome or Edge browser
 
 ```cmd
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git clone https://github.com/tsa2253-1/sixthsense.git
 cd sixthsense
 python -m venv venv
 venv\Scripts\activate.bat
